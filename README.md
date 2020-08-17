@@ -8,6 +8,7 @@
 ```
    <properties>
         <applicationName>${project.artifactId}</applicationName>
+        <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
    </properties>
    ...
    <build>

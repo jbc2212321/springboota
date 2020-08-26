@@ -13,11 +13,13 @@
    ...
    <build>
       <finalName>${applicationName}</finalName>
-      <plugin>
+      <plugins>
+        <plugin>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <version>${spring-boot.version}</version>
             <configuration>
+                <!--需要替换您的springboot启动类-->
                 <mainClass>com.alibaba.sca.temp.web.Application</mainClass>
                 <layout>ZIP</layout>
             </configuration>
@@ -29,6 +31,7 @@
                 </execution>
             </executions>
         </plugin>
+      </plugins>
       ...
     </build>
 ```

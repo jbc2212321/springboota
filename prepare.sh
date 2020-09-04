@@ -16,4 +16,4 @@ do
   fi
 done
 
-echo "java -jar ${APP_NAME}.jar" >> start.sh
+echo "java -Dserver.port=8080 -jar ${APP_NAME}.jar" >> start.sh

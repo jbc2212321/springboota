@@ -1,0 +1,16 @@
+server:
+  port: 8096
+spring:
+  datasource:
+    username: root
+    password: 111111
+    url: jdbc:mysql://localhost:3306/healthCare?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+
+mybatis:
+  type-aliases-package: com.jbc.demoa.pojo
+  mapper-locations: classpath:mybatis/mapper/*.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+

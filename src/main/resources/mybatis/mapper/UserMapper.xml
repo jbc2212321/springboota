@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jbc.demoa.mapper.UserMapper">
+
+
+    <select id="getAllAdminList" resultType="com.jbc.demoa.pojo.admin_account">
+     select * from admin_account
+    </select>
+
+    <!--    之后几条是查询姓名-->
+    <!--    查询管理员用户名-->
+    <select id="getAdminName" resultType="java.lang.String">
+        SELECT userName FROM admin_account WHERE phoneNo=#{phone};
+    </select>
+
+    <!--    查询医生用户名-->
+    <select id="getDoctorName" resultType="java.lang.String">
+        SELECT doctorName FROM doctor WHERE phoneNo=#{phone};
+    </select>
+
+    <!--    查询病人用户名-->
+    <select id="getPatientName" resultType="java.lang.String">
+        SELECT patientName FROM patient WHERE phoneNo=#{phone};
+    </select>
+    <!--    查询管理员用户名-->
+    <select id="getAdminByName" resultType="com.jbc.demoa.pojo.admin_account">
+        select * from admin_account where accountID=#{accountID}
+    </select>
+
+    <insert id="addAdmin" parameterType="com.jbc.demoa.pojo.admin_account">
+        insert into admin_account (userName,password,phoneNo)values(#{userName},#{password},#{phoneNo})
+    </insert>
+
+    <!--    //通过id删除日志-->
+    <delete id="deleteLogByNum">
+        DELETE FROM  LOG WHERE logNo=#{num}
+    </delete>
+
+    <!--//获取所有医生账户信息-->
+    <select id="getAllDocList" resultType="com.jbc.demoa.pojo.doc_account">
+        select * from doc_account
+    </select>
+
+    <!--    增加医生账户-->
+    <insert id="addDocAccount" parameterType="com.jbc.demoa.pojo.doc_account">
+        insert into doc_account (userName,password,phoneNo)values(#{userName},#{password},#{phoneNo})
+    </insert>
+
+    <!--    增加医生个人资料(基础)  通过医生账号中的编号-->
+    <insert id="addDocBase" parameterType="com.jbc.demoa.pojo.doctor">
+         insert into doctor (daccountNo,doctorName,phoneNo)values (#{daccountNo},#{doctorName},#{phoneNo})
+    </insert>
+
+    <!--    通过电话在doc_account表中查询id-->
+    <select id="getDocIdByPhoneNo" resultType="int" parameterType="String">
+     select daccountNo from doc_account where phoneNo = #{phone}
+    </select>
+
+    <!--    新增病人账户-->
+    <insert id="addPatientAccount" parameterType="com.jbc.demoa.pojo.patient_account">
+    insert into patient_account (userName,password,phoneNo)values(#{userName},#{password},#{phoneNo})
+    </insert>
+
+    <!--    新增病人-->
+    <insert id="addPatient" parameterType="com.jbc.demoa.pojo.patient">
+        insert into patient (patientName,phoneNo)values (#{patientName},#{phoneNo})
+    </insert>
+
+    <!--    查询病人账户编号-->
+    <select id="getPatientAccountNoByPhone" resultType="int" parameterType="String">
+    select paccountNo from patient_account  where phoneNo = #{phone}
+    </select>
+
+    <!--    通过电话查询病人id-->
+    <select id="getPatientIdByPhone" resultType="int" parameterType="String">
+    select patientID from patient where phoneNo = #{phone}
+    </select>
+
+    <!--    通过电话查询医生id-->
+    <select id="getDoctorIdByPhone" resultType="int">
+        select doctorID from doctor where phoneNo = #{phone}
+    </select>
+    <!--向医生账号中插入医生id-->
+    <update id="updateDoctorIdByPhone">
+        update doc_account set doctorID =#{doctorID} where phoneNo=#{phone}
+    </update>
+    <!--    向病人账户中添加病人id-->
+    <update id="updatePatientAccountPatientIdByPhone">
+        update patient_account set patientID = #{patientId} where phoneNo=#{phone}
+    </update>
+
+    <!--    向病人添加病人账户-->
+    <update id="updatePatientPatientAccountByPhone">
+        update  patient set paccountNo =#{patientAccountNo} where  phoneNo=#{phone}
+    </update>
+
+    <!--   验证管理员账户是否存在，存在是1，不存在是0-->
+    <select id="checkAdminAccount" resultType="int">
+        SELECT DISTINCT IF(EXISTS(SELECT 1 FROM admin_account where phoneNo=#{phone} and password =#{password}),1,0) AS a FROM admin_account
+    </select>
+
+    <!--    同上，验证病人账户-->
+    <select id="checkPatientAccount" resultType="int">
+        SELECT DISTINCT IF(EXISTS(SELECT 1 FROM patient_account where phoneNo=#{phone} and password =#{password}),1,0) AS a FROM patient_account
+    </select>
+
+    <!--    同上，验证医生账户-->
+    <select id="checkDoctorAccount" resultType="int">
+    SELECT DISTINCT IF(EXISTS(SELECT 1 FROM doc_account where phoneNo=#{phone} and password =#{password}),1,0) AS a FROM doc_account
+    </select>
+
+    <!--    验证管理员账户手机号-->
+    <select id="checkAdminPhone" resultType="int">
+        select case
+        when max(phoneNo) is null then 0 else 1 end phoneNo  from admin_account where phoneNo=#{phone};
+    </select>
+
+    <!--    同上，验证医生手机号-->
+    <select id="checkDoctorAccountPhone" resultType="int">
+        select case
+        when max(phoneNo) is null then 0 else 1 end phoneNo  from doc_account where phoneNo=#{phone};
+    </select>
+
+    <!--    同上,验证病人手机号-->
+    <!--    &#45;&#45;      SELECT DISTINCT IF(EXISTS(SELECT 1 FROM patient_account where phoneNo=#{phone}),1,0) AS a FROM patient_account-->
+    <select id="checkPatientAccountPhone" resultType="int">
+        select case
+        when max(phoneNo) is null then 0 else 1 end phoneNo  from patient_account where phoneNo=#{phone};
+    </select>
+
+    <!--    获取所有病人账号-->
+    <select id="getAllPatientAccount" resultType="java.util.Map">
+        select paccountNo as num, userName as name,phoneNo as tel,"病患" as tag from patient_account
+    </select>
+
+    <!--    获取所有医生账号-->
+    <select id="getAllDocAccount" resultType="java.util.Map">
+        select daccountNo as num,userName as name,phoneNo as tel,"医师" as tag from  doc_account
+    </select>
+
+    <!--    通过手机号查询医生的详细信息-->
+    <select id="getDocDetailInformationByPhone" resultType="java.util.Map" parameterType="String">
+        select * from doctor where phoneNo=#{phone}
+    </select>
+
+    <!--    通过手机号查询病人详细信息-->
+    <select id="getPatientDetailInformationByPhone" resultType="java.util.Map" parameterType="String">
+        select * from patient  where phoneNo=#{phone}
+    </select>
+
+    <!--    接下来多条是删除病人或医生-->
+
+    <!--    删除医生-->
+    <delete id="deleteDocByPhone">
+         delete from  doctor where phoneNo=#{phone}
+    </delete>
+
+    <!--    删除医生账户-->
+    <delete id="deleteDocAccountByPhone">
+        delete from doc_account where phoneNo=#{phone}
+    </delete>
+
+    <!--    删除病人-->
+    <delete id="deletePatientByPhone">
+        delete  from patient where phoneNo=#{phone}
+    </delete>
+
+    <!--    删除病人账户-->
+    <delete id="deletePatientAccountByPhone">
+        delete from patient_account where phoneNo=#{phone}
+    </delete>
+    <!--    上述多条为删除-->
+
+    <!--    选出所有医生，用于病人选择-->
+    <select id="getAllDoc" resultType="java.util.Map">
+        select a.daccountNo as num,a.doctorName as name,d.departmentName as tag,a.phoneNo as tel,"未选" as choose
+        from  doctor a ,department d
+        where a.departmentNo = d.departmentNo
+    </select>
+
+    <!--    添加关系-->
+    <insert id="insertRelationship">
+        insert into doctor_patient_relationship (patientID,doctorID,date)values (#{PatientID},#{DoctorID},#{date})
+    </insert>
+
+    <!--    添加权限-->
+    <insert id="insertRestriction">
+        insert into restriction (patientID,doctorID)values(#{PatientID},#{DoctorID})
+    </insert>
+
+    <!--    通过病人编号查询其选择的医生-->
+    <select id="getRelationshipByPatientId" resultType="java.util.Map">
+        select doctorID,state from  doctor_patient_relationship where patientID =#{PatientID}
+    </select>
+
+    <!--    通过医生编号返回病人选择的医生-->
+    <select id="getDocListByDocId" resultType="java.util.Map">
+        select a.daccountNo as num,a.doctorName as name,d.departmentName as tag,a.phoneNo as tel
+        from  doctor a ,department d
+        where a.departmentNo = d.departmentNo and a.doctorID = #{DoctorID}
+    </select>
+
+    <!--    通过编号修改医生对病人的权限-->
+    <update id="updateRelationshipByPatientId">
+        update restriction set blood_grant=#{blood} ,tooth_grant=#{tooth}
+        where patientID=#{PatientID} and doctorID=#{DoctorID}
+    </update>
+
+    <!--    通过编号删除病人选择的医生-->
+    <delete id="deleteRelationshipByPatientId">
+        delete from doctor_patient_relationship
+        where patientID=#{PatientID} and doctorID=#{DoctorID}
+    </delete>
+
+    <!--    通过编号删除病人选择医生的权限-->
+    <delete id="deleteRestrictionByPatientId">
+        delete from restriction
+        where patientID=#{PatientID} and doctorID=#{DoctorID}
+    </delete>
+
+    <!--    通过医生手机号修改医生的个人信息-->
+    <update id="updateDocDetail" parameterType="java.util.HashMap">
+        update doctor
+        set
+        sex=#{sex},
+        address=#{address},
+        birthday=#{birthday},
+        departmentNo=#{departmentNo},
+        introduction=#{introduction},
+        expertise=#{expertise},
+        achievements=#{achievements},
+        nationality=#{nationality},
+        nation = #{nation},
+        college=#{college},
+        nativePlace=#{nativePlace},
+        works = #{works},
+        evaluation=#{evaluation}
+        where phoneNo=#{phoneNo}
+    </update>
+
+    <!--    通过病人手机号修改病人信息-->
+    <update id="updatePatientDetail" parameterType="java.util.HashMap">
+            update patient
+            set
+            birthday=#{birthday},
+            sex=#{sex}
+            where phoneNo=#{phoneNo}
+    </update>
+
+    <!--    通过医生编号查看其管理的病人列表-->
+    <select id="getDocsPatient" resultType="java.util.HashMap">
+         SELECT patientID as num,patientName as name,sex ,phoneNo as tel
+         FROM patient
+         WHERE patientID in
+         (SELECT patientID FROM doctor_patient_relationship WHERE doctorID=#{DoctorID})
+    </select>
+
+
+    <!--通过医生id查看其管理病人的所有体检单-->
+    <select id="getDocsPatientsRecord" resultType="java.util.HashMap">
+         SELECT "血液科" AS tag,b.bloodNo as num,b.DATE as `date`,p.patientName as name,p.phoneNo as tel FROM blood_routine b, patient p
+          WHERE b.patientID=p.patientID
+          AND b.patientID
+          IN
+          (SELECT patientID FROM restriction  WHERE doctorID=#{DoctorID} AND blood_grant=1)
+          AND b.patientID = #{PatientID}
+          Union
+        SELECT "口腔科" AS tag,b.toothNo as num ,b.DATE as `date`,p.patientName as name,p.phoneNo as tel FROM tooth_routine b, patient p
+        WHERE b.patientID=p.patientID
+        AND  b.patientID
+        IN
+        (SELECT patientID FROM restriction  WHERE doctorID=#{DoctorID} AND tooth_grant=1)
+        AND b.patientID = #{PatientID};
+
+
+    </select>
+
+    <!--    通过病人id查看其设置的权限-->
+    <select id="getPatientRelationship" resultType="java.util.HashMap">
+        SELECT blood_grant AS blood,tooth_grant AS tooth FROM  restriction WHERE patientID=#{PatientID} AND doctorID=#{DoctorID};
+    </select>
+
+    <select id="getDocByPhone" resultType="com.jbc.demoa.pojo.doctor">
+    </select>
+
+    <!--    //通过预约编号修改预约的状态-->
+    <select id="getDocsAppointment" resultType="java.util.HashMap">
+        SELECT a.appointmentNo as num,p.patientName as name,p.phoneNo as tel,a.bTime,a.eTime,a.state as choose
+        FROM appointment a,patient p
+        WHERE p.patientID=a.paccountNo AND a.daccountNo=#{DoctorID} AND DATE_FORMAT(a.btime,'%Y-%m-%d')>=#{date};
+    </select>
+
+
+    <!--    更新预约中state状态-->
+    <update id="setDocsAppointment">
+        UPDATE appointment SET state=#{state} WHERE appointmentNo=#{num};
+
+    </update>
+
+    <!--    //添加病人对医生的预约-->
+    <insert id="insertPatientAppointment">
+        INSERT INTO appointment ( paccountNo,daccountNo,bTime,eTime,state )
+        VALUES(#{patientID}, #{doctorID},#{start},#{end},0 )
+    </insert>
+
+    <!--        //通过病人id查看其预约的情况-->
+    <select id="getPatientsAppointment" resultType="java.util.HashMap">
+	       SELECT a.appointmentNo AS num,p.doctorName AS name,p.phoneNo AS tel,a.bTime,a.eTime,a.state AS choose,p.departmentNo as tag
+            FROM appointment a,doctor p
+            WHERE p.daccountNo=a.daccountNo AND a.paccountNo=#{patientID} AND DATE_FORMAT(a.btime,'%Y-%m-%d')>=#{date}
+    </select>
+
+    <!--     //一个人病人只能选择一个医生，查看有没有重复的-->
+    <select id="getPatientsAppointmentSingle" resultType="int">
+        SELECT IF( EXISTS(
+             SELECT *
+             FROM appointment
+             WHERE `paccountNo` =  #{patientID} and `daccountNo` =#{doctorID}
+             and `state`!=2
+             AND DATE_FORMAT(`btime`,'%Y-%m-%d')>=#{date}) , 1, 0) as judge;
+    </select>
+
+    <!--    病人通过编号取消预约-->
+    <delete id="deletePatientsAppointment">
+        delete from appointment WHERE `appointmentNo`=#{num}
+    </delete>
+
+    <!--        //医生预约时候检查是否冲突,获取该医生对应所有病人的时间-->
+    <select id="checkDocsAppointment" resultType="java.util.HashMap">
+        select bTime,eTime from appointment where daccountNo =#{doctorID} and appointmentNo !=#{appointmentNo} and state=1
+    </select>
+
+    <!--    向待办事项中添加病人删除医师-->
+    <insert id="insertTodoListDelete">
+        INSERT INTO todolist (`type`,userNo,todolist_type, content,doctorNo,`time`,state)
+        VALUES("病人",#{patientId},1,"删除医生",#{doctorId},#{date},0)
+    </insert>
+
+    <!--    向待办事项中添加重置密码-->
+    <insert id="insertTodoListRest">
+        INSERT INTO todolist (`type`,userNo,todolist_type, content,`time`,state)
+        VALUES(#{type},#{userId},0,"重置密码",#{date},0)
+    </insert>
+
+    <!--    获取删除病人的todoList-->
+    <select id="getTodoListDelete" resultType="java.util.HashMap">
+    SELECT t.todolist_no as num,t.userno as id,p.patientName as name,t.doctorNo as doctorId,d.doctorName,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state
+    FROM todolist t,patient p,doctor d
+    WHERE ((t.userNO=p.patientID AND TYPE="病人") OR (t.userNO=d.doctorID AND TYPE="医生")) AND t.doctorNo=d.doctorID and t.state=0
+    </select>
+
+
+    <!--    获取重置密码的todoList-->
+    <select id="getTodoListReset" resultType="java.util.HashMap">
+        SELECT t.todolist_no as num,t.userno as id,p.patientName as name,p.phoneNo as tel,t.type as type,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state FROM todolist t,patient p
+        WHERE t.userNO=p.patientID AND TYPE="病人" AND t.state=0 AND content="重置密码"
+        UNION
+        SELECT t.todolist_no as num,t.userno as id,d.doctorName as name,d.phoneNo as tel,t.type as type,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state FROM todolist t,doctor d
+        WHERE t.userNO=d.doctorID AND TYPE="医生" AND t.state=0 AND content="重置密码"
+        UNION
+        SELECT t.todolist_no as num,t.userno as id,a.userName as name,a.phoneNo as tel,t.type as type,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state FROM todolist t,admin_account a
+        WHERE t.userNO=a.accountID AND TYPE="管理员" AND t.state=0 AND content="重置密码"
+    </select>
+</mapper>

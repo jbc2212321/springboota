@@ -13,10 +13,11 @@ public class test {
         //  System.out.println(secret.getSecureDataIndex(2.0));
         // System.out.println(secret.getSecureDataIndex(2.0));
 
-        BloodTable bt=new BloodTable();
+     //   BloodTable bt=new BloodTable();
        // String s=AES.encrypt(2.0);
        // System.out.println(AES.decrypt(s));
         Vector<FatherTable> ftV= CSV.csvRead("C:\\Users\\78240\\Desktop\\csv\\testtooth - 副本.csv","toothTable");
+
         //  bloodTable bt=new bloodTable();
      //  System.out.println(1111);
         //System.out.println(DBH.search(jsonHelper.TestJson()));

@@ -398,11 +398,14 @@ public class DBH {
                 sql+= "tooth_routine(patientID,date,pain,pain_index,mobility,mobility_index,tartar,tartar_index)"
                         +" VALUES(?,?,?,?,?,?,?,?);";
             }
-
+       //     System.out.println(sql);
             PreparedStatement stt = conn.prepareStatement(sql);
             //执行sql语句
 
             stt.setInt(1,patientID);
+           // System.out.println(date);
+            date=date.replace('/','-');
+           // System.out.println(date);
             stt.setDate(2, Date.valueOf(date));
             for(int i=0;i<num.size();++i){
                 stt.setString(3+i*2,num.elementAt(i));

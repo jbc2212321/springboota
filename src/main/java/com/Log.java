@@ -94,21 +94,24 @@ public class Log {
         //通过日期进行查询日志
         Conn=DBH.getConnection();
         Statement stt;
+      //  System.out.println("查询日期");
         ArrayList<JSONObject> joA = new ArrayList<>();
-        String Sql = "SELECT logNo as num,userNo as id ,type as account,action,time FROM log WHERE date_format(date,'%Y-%m-%d')=" + date + ";";
+      //  System.out.println("date:"+date);
+        String Sql = "SELECT logNo as num,userNo as id ,type as account,action,time FROM log WHERE date_format(time,'%Y-%m-%d')=\"" + date + "\";";
         stt = Conn.createStatement();
+    //    System.out.println("sql"+Sql);
         ResultSet set = null;
         set = stt.executeQuery(Sql);
-
+      //  System.out.println(set.toString());
         while (set.next()) {
             JSONObject JO = new JSONObject();
 
-            JO.put("logNo", set.getInt(1));
-            JO.put("userNo", set.getInt(2));
-            JO.put("type", set.getString(3));
+            JO.put("num", set.getInt(1));
+            JO.put("id", set.getInt(2));
+            JO.put("account", set.getString(3));
             JO.put("action", set.getString(4));
             JO.put("time", set.getTimestamp(5).toString().split("\\.")[0]);
-
+         //   System.out.println("中途jo："+JO);
             joA.add(JO);
         }
         return joA;

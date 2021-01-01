@@ -1,9 +1,11 @@
 package com.jbc.demoa.controller;
 
+import com.CSV;
 import com.Log;
 import com.alibaba.fastjson.JSONObject;
 import com.jbc.demoa.mapper.UserMapper;
 import com.jbc.demoa.pojo.*;
+import com.jbc.demoa.util.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,7 +85,6 @@ public class UserController {
         boolean isRegister = false;
         int checkPhone = -1;
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
-//        System.out.println(jsonObject);
         String userName = jsonObject.getString("username");
         String password = jsonObject.getString("password");
         String phone = jsonObject.getString("phone");
@@ -181,7 +182,6 @@ public class UserController {
     @RequestMapping(value = "/userLoginOut", method = RequestMethod.POST, consumes = "application/json")
     public void userLoginOut(@RequestBody String jsonParamStr) {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
-//        System.out.println(jsonObject);
         String phone = jsonObject.getString("phone");
         int state = jsonObject.getInteger("state");
         switch (state) {
@@ -201,7 +201,6 @@ public class UserController {
     @CrossOrigin
     @RequestMapping("/uploadFile")
     public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        System.out.println(file);
         if (file.isEmpty()) {
             return "上传失败，请选择文件";
         }
@@ -218,10 +217,35 @@ public class UserController {
         String path = "C:\\Users\\78240\\Desktop\\download\\";
         //生成保存文件
         File uploadFile = new File(path + dFileName);
-        //   CSV.csvRead(uploadFile.toString(),"");
         //将上传文件保存到路径
         try {
             file.transferTo(uploadFile);
+            if (originalFilename.charAt(0) == 'B') {
+
+                if (!util.checkForBlood(path + dFileName)) {
+                    if (uploadFile.exists()) {
+                        uploadFile.delete();
+                    }
+                    return "表名与csv内容冲突";
+                }
+                CSV.csvRead(path + dFileName, "bloodTable");
+            } else if (originalFilename.charAt(0) == 'T') {
+                if (!util.checkForTooth(path + dFileName)) {
+                    if (uploadFile.exists()) {
+                        uploadFile.delete();
+                    }
+                    return "表名与csv内容冲突";
+                }
+                CSV.csvRead(path + dFileName, "toothTable");
+            } else {
+                if (uploadFile.exists()) {
+                    uploadFile.delete();
+                }
+                return "命名不正确";
+            }
+            if (uploadFile.exists()) {
+                uploadFile.delete();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -243,6 +267,17 @@ public class UserController {
     @RequestMapping(value = "/getAllLog", method = RequestMethod.GET)
     public ArrayList<JSONObject> getAllLog() throws SQLException, IOException, ClassNotFoundException {
         return Log.searchLog();
+    }
+
+    //通过日期筛选日志
+    @CrossOrigin
+    @RequestMapping(value = "/getAllLogByDate", method = RequestMethod.POST, consumes = "application/json")
+    public ArrayList<JSONObject> getAllLogByDate(@RequestBody String jsonParamStr) throws SQLException, IOException, ClassNotFoundException {
+        JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
+        Date date = jsonObject.getDate("date");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        return Log.searchLogWithDate(df.format(date));
+
     }
 
     //通过编号删除日志
@@ -335,11 +370,10 @@ public class UserController {
     @RequestMapping(value = "/updateTodoList", method = RequestMethod.POST, consumes = "application/json")
     public void updateTodoList(@RequestBody String jsonParamStr) {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
-        System.out.println(jsonParamStr);
         int num = jsonObject.getInteger("num");
         int state = jsonObject.getInteger("state");
         String content = jsonObject.getString("content");
-        if(state==1){
+        if (state == 1) {
             if (content.equals("重置密码")) {
                 String phone = jsonObject.getString("phone");
                 String type = jsonObject.getString("type");
@@ -351,7 +385,7 @@ public class UserController {
                     userMapper.updateDoctorPassword(phone, "111111");
                 }
             } else if (content.equals("删除医生")) {
-                int patientId =jsonObject.getInteger("patientId");
+                int patientId = jsonObject.getInteger("patientId");
                 int doctorId = jsonObject.getInteger("doctorId");
                 userMapper.deleteRelationshipByPatientId(patientId, doctorId);
                 userMapper.deleteRestrictionByPatientId(patientId, doctorId);

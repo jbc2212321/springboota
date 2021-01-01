@@ -33,7 +33,6 @@ public class DoctorController {
     @RequestMapping(value = "/updateDocDetail", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
     public String updateDocDetail(@RequestBody String jsonParamStr) {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
-//        System.out.println(jsonObject);
         Map<String, Object> map = new HashMap<>();
         String doctorPhone = jsonObject.getString("DoctorPhone");
         String sex = jsonObject.getString("sex");
@@ -50,10 +49,7 @@ public class DoctorController {
         if (jsonObject.getString("birthday") != null) {
             map.put("birthday", jsonObject.getString("birthday").substring(0, 10));
         }
-//        System.out.println("到底是什么啊:"+jsonObject.getInteger("departmentNo"));
-//        System.out.println("啊:"+jsonObject.getString("departmentNo"));
         if (jsonObject.getInteger("departmentNo") != null) {
-//            System.out.println(jsonObject.getInteger("departmentNo"));
             if (jsonObject.getInteger("departmentNo") != 0) {
                 map.put("departmentNo", jsonObject.getInteger("departmentNo"));
             }
@@ -158,7 +154,6 @@ public class DoctorController {
     @RequestMapping(value = "/getDocsAppointment", method = RequestMethod.POST, consumes = "application/json")
     public List<Map<Object, Object>> getDocsAppointment(@RequestBody String jsonParamStr) {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
-//        System.out.println(jsonObject);
         String doctorPhone = jsonObject.getString("phone");
         int doctorId = userMapper.getDocIdByPhoneNo(doctorPhone);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -199,8 +194,6 @@ public class DoctorController {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         List<Map<String, Object>> mapList = userMapper.checkDocsAppointment(doctorId, appointmentNo);
         for (Map<String, Object> map : mapList) {
-//            System.out.println("直接读出btime:"+map.get("bTime"));
-            System.out.println(util.dateCheck(date01, date02, formatter.format(map.get("bTime")), formatter.format(map.get("eTime"))));
             if (!util.dateCheck(date01, date02, formatter.format(map.get("bTime")), formatter.format(map.get("eTime")))) {
                 return false;
             }

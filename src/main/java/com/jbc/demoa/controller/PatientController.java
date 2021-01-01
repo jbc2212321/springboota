@@ -63,7 +63,7 @@ public class PatientController {
             docList.add(map);
 
         }
-//        System.out.println(docList);
+
         return docList;
 
     }
@@ -122,12 +122,9 @@ public class PatientController {
     public List<JSONObject> selectPatientCase(@RequestBody String jsonParamStr) {
 
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
-//        JSONArray value = jsonObject.getJSONArray("value");
-//        System.out.println("前端返回:"+jsonObject);
         int patientId = userMapper.getPatientIdByPhone(jsonObject.getString("phone"));
         Log.search(patientId, "病人");
         jsonObject.put("patientId", patientId);
-//        System.out.println("后端处理:"+jsonObject);
         Log.search(patientId, "病人");
         return DBH.search(JsonHelper.JsonToJson(jsonObject));
     }
@@ -152,8 +149,7 @@ public class PatientController {
         map.put("birthday", jsonObject.getString("birthday").substring(0, 10));
         map.put("phoneNo", patientPhone);
         userMapper.updatePatientDetail(map);
-//        System.out.println(map.toString());
-        //     Log.changeUserImformation(pa);
+//        Log.changeUserImformation(userMapper.getPatientIdByPhone(patientPhone),"病人");
         return "修改成功";
     }
 
@@ -175,7 +171,6 @@ public class PatientController {
         String doctorPhone = jsonObject.getString("DoctorPhone");
         int patientID = userMapper.getPatientIdByPhone(patientPhone);
         int doctorID = userMapper.getDoctorIdByPhone(doctorPhone);
-        //        System.out.println(list.toString());
         return userMapper.getPatientRelationship(patientID, doctorID);
     }
 
@@ -232,8 +227,6 @@ public class PatientController {
         int doctorID = userMapper.getDocIdByPhoneNo(doctorPhone);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String date = formatter.format(new Date(System.currentTimeMillis()));
-        System.out.println("date"+date);
-        System.out.println("返回:"+userMapper.getPatientsAppointmentSingle(patientID, doctorID, date));
         return userMapper.getPatientsAppointmentSingle(patientID, doctorID, date);
     }
 

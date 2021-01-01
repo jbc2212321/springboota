@@ -54,7 +54,7 @@ public class CSV {
         //从csv文件中读取牙齿表
         Vector<FatherTable> ftVec=new Vector<>(3);
         ArrayList<String []> List = new ArrayList<String[]>();
-
+   //     System.out.println("111111");
         reader.readHeaders();
         while(reader.readRecord()) {
             List.add(reader.getValues());

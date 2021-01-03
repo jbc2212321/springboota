@@ -146,7 +146,10 @@ public class PatientController {
         } else {
             map.put("sex", jsonObject.getString("sex"));
         }
-        map.put("birthday", jsonObject.getString("birthday").substring(0, 10));
+        if(jsonObject.getString("birthday")!=null){
+            map.put("birthday", jsonObject.getString("birthday").substring(0, 10));
+        }
+
         map.put("phoneNo", patientPhone);
         userMapper.updatePatientDetail(map);
 //        Log.changeUserImformation(userMapper.getPatientIdByPhone(patientPhone),"病人");

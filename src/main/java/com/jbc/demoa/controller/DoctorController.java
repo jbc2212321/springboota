@@ -38,9 +38,9 @@ public class DoctorController {
         String sex = jsonObject.getString("sex");
         if (sex.length() == 2) {
             if (sex.equals("男性")) {
-                map.put("sex", "f");
-            } else if (sex.equals("女性")) {
                 map.put("sex", "m");
+            } else if (sex.equals("女性")) {
+                map.put("sex", "f");
             }
         } else {
             map.put("sex", jsonObject.getString("sex"));
@@ -83,9 +83,9 @@ public class DoctorController {
                 maps.put("sex", "");
             } else {
                 if (maps.get("sex").equals("m")) {
-                    maps.put("sex", "女性");
-                } else if (maps.get("sex").equals("f")) {
                     maps.put("sex", "男性");
+                } else if (maps.get("sex").equals("f")) {
+                    maps.put("sex", "女性");
                 } else {
                     maps.put("sex", "");
                 }

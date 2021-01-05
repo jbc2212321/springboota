@@ -200,4 +200,8 @@ public interface UserMapper {
     void updateTodoList(@Param("num")int num,@Param("state")int state);
 
 
+    //管理员拒绝删除医师
+    @Update("update doctor_patient_relationship set state=2 where patientID=#{patientID} and doctorID=#{doctorID} ")
+    void updateTodoListState2(@Param("patientID") int patientID, @Param("doctorID")int doctorID);
+
 }

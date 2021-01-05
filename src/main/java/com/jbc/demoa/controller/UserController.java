@@ -391,6 +391,13 @@ public class UserController {
                 userMapper.deleteRestrictionByPatientId(patientId, doctorId);
                 Log.changeDoctorPrivilege(patientId, "病人");
             }
+        }else if (state==2){
+            if (content.equals("删除医生")) {
+                int patientId = jsonObject.getInteger("patientId");
+                int doctorId = jsonObject.getInteger("doctorId");
+                userMapper.updateTodoListState2(patientId,doctorId);
+                Log.changeDoctorPrivilege(patientId, "病人");
+            }
         }
         userMapper.updateTodoList(num, state);
     }

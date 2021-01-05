@@ -13,7 +13,7 @@ public class Secret {
 
     public static SecretKey getKey() {
         //读取密钥，如果没有密钥，则生成密钥
-        FileHelper fi = new FileHelper("E:\\programming\\java\\demoa\\src\\secretKey");
+        FileHelper fi = new FileHelper("E:\\programming\\java\\demoa\\s//rc\\secretKey");
         SecretKey sk = fi.getObjFromFile();
         if (sk != null) return sk;
         sk = Gen.GenKey(64);

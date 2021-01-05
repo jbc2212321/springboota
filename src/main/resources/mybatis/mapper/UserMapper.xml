@@ -344,7 +344,7 @@
         VALUES(#{type},#{userId},0,"重置密码",#{date},0)
     </insert>
 
-    <!--    获取删除病人的todoList-->
+    <!--    获取删除医师的todoList-->
     <select id="getTodoListDelete" resultType="java.util.HashMap">
     SELECT t.todolist_no as num,t.userno as id,p.patientName as name,t.doctorNo as doctorId,d.doctorName,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state
     FROM todolist t,patient p,doctor d

@@ -285,6 +285,7 @@ public class DBH {
         //调用子函数进行查询
         Connection conn=null;
         ResultSet set=null;
+  //      System.out.println(jo);
         String tablename=jo.getString("tableName");
 
         try {

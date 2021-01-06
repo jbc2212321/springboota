@@ -399,6 +399,7 @@ public class UserController {
                 Log.changeDoctorPrivilege(patientId, "病人");
             }
         }
+
         userMapper.updateTodoList(num, state);
     }
 }

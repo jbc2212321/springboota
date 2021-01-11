@@ -348,7 +348,7 @@
     <select id="getTodoListDelete" resultType="java.util.HashMap">
     SELECT t.todolist_no as num,t.userno as id,p.patientName as name,t.doctorNo as doctorId,d.doctorName,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state
     FROM todolist t,patient p,doctor d
-    WHERE ((t.userNO=p.patientID AND TYPE="病人") OR (t.userNO=d.doctorID AND TYPE="医生")) AND t.doctorNo=d.doctorID and t.state=0
+    WHERE ((t.userNO=p.patientID AND TYPE="病人") OR (t.userNO=d.doctorID AND TYPE="医师")) AND t.doctorNo=d.doctorID and t.state=0
     </select>
 
 
@@ -358,7 +358,7 @@
         WHERE t.userNO=p.patientID AND TYPE="病人" AND t.state=0 AND content="重置密码"
         UNION
         SELECT t.todolist_no as num,t.userno as id,d.doctorName as name,d.phoneNo as tel,t.type as type,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state FROM todolist t,doctor d
-        WHERE t.userNO=d.doctorID AND TYPE="医生" AND t.state=0 AND content="重置密码"
+        WHERE t.userNO=d.doctorID AND TYPE="医师" AND t.state=0 AND content="重置密码"
         UNION
         SELECT t.todolist_no as num,t.userno as id,a.userName as name,a.phoneNo as tel,t.type as type,t.content,DATE_FORMAT(t.time,'%Y-%m-%d %H:%i:%s')as time,t.state FROM todolist t,admin_account a
         WHERE t.userNO=a.accountID AND TYPE="管理员" AND t.state=0 AND content="重置密码"
